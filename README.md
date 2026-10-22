@@ -1,2 +1,3 @@
 # ai-powered-lost-and-found
-this is mini-project for college
+AI-Powered Lost and Found System using Python Flask
+
