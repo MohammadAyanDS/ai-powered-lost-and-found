@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Report a {{ report_type }} item — Findly{% endblock %}
+{% block content %}
+<section class="form-page">
+  <div class="form-intro"><a class="back-link" href="{{ url_for('index') }}">← Back home</a><div class="eyebrow">HELP MAKE A CONNECTION</div>
+  <h1>{% if report_type == 'lost' %}Let's find your <em>missing item.</em>{% else %}You found something.<br><em>That's a good thing.</em>{% endif %}</h1>
+  <p>Share a few details below. Clear descriptions help the matching system suggest more relevant reports.</p>
+  <div class="form-tip"><span>✧</span><div><b>A little detail goes a long way.</b><small>Include colours, brands, marks, or other identifying features—but keep one unique detail private so you can verify ownership.</small></div></div>
+  </div>
+  <form class="report-form" method="post">
+    <div class="form-card">
+      <div class="form-card-title"><span>01</span><div><h2>Item details</h2><p>What are we looking for?</p></div></div>
+      <label>Item name <span>*</span><input name="title" required maxlength="100" placeholder="e.g. Navy blue water bottle" value="{{ form.get('title','') }}"></label>
+      <label>Category <span>*</span><select name="category" required><option value="">Choose a category</option>{% for c in ['Electronics','Bags','Keys','Documents','Clothing','Books','Accessories','Other'] %}<option value="{{ c }}" {% if form.get('category') == c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></label>
+      <label>Description <span>*</span><textarea name="description" required maxlength="1000" rows="4" placeholder="Describe the item, colour, brand, size, or unique features...">{{ form.get('description','') }}</textarea><small class="field-hint">Avoid posting confidential numbers or highly sensitive details.</small></label>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title"><span>02</span><div><h2>Where & when</h2><p>Help narrow down a possible match.</p></div></div>
+      <label>Location <span>*</span><input name="location" required maxlength="150" placeholder="e.g. College library, ground floor" value="{{ form.get('location','') }}"></label>
+      <label>Date <span>*</span><input type="date" name="item_date" required value="{{ form.get('item_date','') }}"></label>
+    </div>
+    <div class="form-card">
+      <div class="form-card-title"><span>03</span><div><h2>Contact information</h2><p>For a safe follow-up if a possible match appears.</p></div></div>
+      <label>Your name <span>*</span><input name="contact_name" required maxlength="100" placeholder="Name" value="{{ form.get('contact_name','') }}"></label>
+      <label>Email address <span>*</span><input type="email" name="contact_email" required maxlength="200" placeholder="you@example.com" value="{{ form.get('contact_email','') }}"></label>
+      <label>Phone / WhatsApp number <span>*</span><input type="tel" name="contact_phone" required minlength="7" maxlength="25" placeholder="e.g. +91 9876543210" value="{{ form.get('contact_phone','') }}"><small class="field-hint">Include your country code (for example, +91 for India) to make WhatsApp contact work reliably.</small></label>
+      <div class="privacy-inline">♧ <span>Your email and phone are shown on this report's details page so people can contact you about a possible match. Do not enter private contact details if you do not want them visible. Use test details for classroom demos.</span></div>
+    </div>
+    <button class="btn btn-primary submit-btn" type="submit">Submit {{ report_type }} report <span>↗</span></button>
+  </form>
+</section>
+{% endblock %}

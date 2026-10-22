@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Browse reports — Findly{% endblock %}
+{% block content %}
+<section class="search-page">
+  <div class="eyebrow">THE COMMUNITY BOARD</div><h1>Find what you're <em>looking for.</em></h1><p class="page-lede">Search reports or filter the board to find a possible match.</p>
+  <form class="search-form" action="{{ url_for('search') }}" method="get"><span>⌕</span><input name="q" value="{{ q }}" placeholder="Try “black wallet” or “library”"><button class="btn btn-primary">Search</button></form>
+  <form class="filters" action="{{ url_for('search') }}" method="get"><input type="hidden" name="q" value="{{ q }}"><label>Report type<select name="type"><option value="">All reports</option><option value="lost" {% if report_type=='lost' %}selected{% endif %}>Lost</option><option value="found" {% if report_type=='found' %}selected{% endif %}>Found</option></select></label><label>Category<select name="category"><option value="">All categories</option>{% for c in categories %}<option value="{{ c }}" {% if category==c %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></label><button class="btn btn-light">Apply filters</button><a class="clear-link" href="{{ url_for('search') }}">Clear</a></form>
+  <div class="results-top"><b>{{ items|length }} report{% if items|length != 1 %}s{% endif %}</b><span>Possible matches are suggestions, not proof of ownership.</span></div>
+  {% if items %}
+  <div class="item-grid">
+    {% for item in items %}
+    <a class="item-card" href="{{ url_for('item_detail', item_id=item.id) }}"><div class="item-card-top"><span class="category-mark">{{ {'Electronics':'⌁','Bags':'▱','Keys':'⚿','Documents':'▤','Clothing':'◇','Books':'▤','Accessories':'✧','Other':'＋'}.get(item.category, '✧') }}</span><span class="status-pill {{ item.report_type }}">{{ item.report_type }} item</span></div><h3>{{ item.title }}</h3><p>{{ item.description[:130] }}{% if item.description|length > 130 %}…{% endif %}</p><div class="item-meta"><span>⌖ {{ item.location }}</span><span>{{ item.item_date }}</span></div><div class="reporter-line">Reported by <strong>{{ item.contact_name }}</strong></div><div class="card-arrow">↗</div></a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">⌕</div><h3>No reports match those filters.</h3><p>Try a different keyword or clear the filters to see all reports.</p><a class="btn btn-light" href="{{ url_for('search') }}">Clear search</a></div>
+  {% endif %}
+</section>
+{% endblock %}

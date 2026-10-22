@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}Admin demo — Findly{% endblock %}
+{% block content %}
+<section class="admin-page"><div class="eyebrow">DEMO CONTROL PANEL</div><h1>Community <em>reports.</em></h1><p class="page-lede">A simple overview of submitted reports for project demonstration.</p><div class="admin-warning">⚠ Demo only: this page is not password-protected. Do not deploy it publicly without adding authentication and permissions.</div>
+<div class="admin-table-wrap"><table><thead><tr><th>ID</th><th>Type</th><th>Item</th><th>Reporter</th><th>Email</th><th>Phone</th><th>Category</th><th>Location</th><th>Date</th><th>Action</th></tr></thead><tbody>{% for item in items %}<tr><td>#{{ item.id }}</td><td><span class="status-pill {{ item.report_type }}">{{ item.report_type }}</span></td><td><a href="{{ url_for('item_detail', item_id=item.id) }}">{{ item.title }}</a></td><td>{{ item.contact_name }}</td><td>{{ item.contact_email }}</td><td>{{ item.contact_phone or '—' }}</td><td>{{ item.category }}</td><td>{{ item.location }}</td><td>{{ item.item_date }}</td><td><form method="post" action="{{ url_for('delete_item', item_id=item.id) }}" onsubmit="return confirm('Delete this report from the local demo database?')"><button class="delete-btn">Delete</button></form></td></tr>{% else %}<tr><td colspan="10" class="table-empty">No reports have been submitted yet.</td></tr>{% endfor %}</tbody></table></div>
+</section>
+{% endblock %}

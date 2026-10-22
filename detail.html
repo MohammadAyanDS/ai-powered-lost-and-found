@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ item.title }} — Findly{% endblock %}
+{% block content %}
+<section class="detail-page">
+  <a class="back-link" href="{{ url_for('search') }}">← Back to reports</a>
+  <div class="detail-layout"><div class="detail-main">
+    <div class="detail-icon">{{ {'Electronics':'⌁','Bags':'▱','Keys':'⚿','Documents':'▤','Clothing':'◇','Books':'▤','Accessories':'✧','Other':'＋'}.get(item.category, '✧') }}</div>
+    <span class="status-pill {{ item.report_type }}">{{ item.report_type }} item</span><div class="eyebrow">{{ item.category }}</div><h1>{{ item.title }}</h1><p class="detail-description">{{ item.description }}</p>
+    <div class="detail-facts"><div><span>⌖</span><div><small>Reported location</small><b>{{ item.location }}</b></div></div><div><span>◷</span><div><small>Date of incident</small><b>{{ item.item_date }}</b></div></div><div><span>▦</span><div><small>Report ID</small><b>#{{ item.id }}</b></div></div><div><span>♙</span><div><small>Reported by</small><b>{{ item.contact_name }}</b></div></div></div>
+    <div class="verification-note"><span>♧</span><div><b>Verify before you reunite.</b><p>Ask the claimant to describe a private identifying detail and have an authorised staff member verify ownership before handing over an item.</p></div></div>
+  </div><aside class="detail-side"><div class="side-label">CONTACT REPORTER</div><h3>Get in touch about this item.</h3>
+    <div class="contact-card"><div class="contact-person"><small>Reported by</small><b>{{ item.contact_name }}</b></div>
+      <div class="contact-detail"><small>Email address</small><span>{{ item.contact_email or 'Not provided' }}</span></div>
+      <div class="contact-detail"><small>Phone / WhatsApp</small><span>{{ item.contact_phone or 'Not provided on this older report' }}</span></div>
+      {% if item.contact_email %}<a class="btn btn-primary full-btn" href="mailto:{{ item.contact_email|e }}?subject={{ ('Lost and Found: ' ~ item.title)|urlencode }}">✉ Send Email</a>{% endif %}
+      {% if item.contact_phone %}{% set phone_digits = item.contact_phone|replace('+','')|replace(' ','')|replace('-','')|replace('(','')|replace(')','') %}<a class="btn btn-secondary full-btn" href="tel:{{ phone_digits|e }}">☎ Call</a><a class="btn btn-secondary full-btn" target="_blank" rel="noopener noreferrer" href="https://wa.me/{{ phone_digits|replace('+','')|replace(' ','')|replace('-','')|replace('(','')|replace(')','') }}?text={{ ('Hello, I am contacting you about your ' ~ item.report_type ~ ' item report: ' ~ item.title)|urlencode }}">◉ WhatsApp</a>{% endif %}
+    </div><p class="contact-safety-note">Verify a claimant's ownership using a private identifying detail. Meet in a safe public place or ask campus staff to coordinate the handover.</p><a class="btn btn-primary full-btn" href="{{ url_for('search') }}">Browse other reports ↗</a></aside></div>
+  <section class="matches-section"><div class="section-heading"><div><div class="eyebrow">SMART SUGGESTIONS</div><h2>Possible <em>matches.</em></h2></div><span class="match-note">AI scores are estimates—not confirmation.</span></div>
+  {% if matches %}<div class="match-list">{% for match in matches %}<a class="match-row" href="{{ url_for('item_detail', item_id=match.item.id) }}"><span class="match-symbol">✧</span><span class="match-info"><b>{{ match.item.title }}</b><small>{{ match.item.category }} · {{ match.item.location }} · {{ match.item.item_date }}</small></span><span class="match-score">{{ (match.score * 100)|round|int }}%<small>similarity</small></span><span class="match-arrow">↗</span></a>{% endfor %}</div>{% else %}<div class="empty-match">No likely opposite-type reports yet. New reports may create a possible match later.</div>{% endif %}
+  </section>
+</section>
+{% endblock %}

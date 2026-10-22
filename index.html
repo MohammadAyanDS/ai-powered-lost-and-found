@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Findly — Lost things, found connections{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="pulse"></span> A smarter campus community</div>
+      <h1>Lost something?<br><em>Let's find it.</em></h1>
+      <p class="hero-lede">One community, one place to reunite lost belongings with the people who miss them. Simple reports, smarter matches.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="{{ url_for('report', report_type='lost') }}">I lost something <span>↗</span></a>
+        <a class="btn btn-light" href="{{ url_for('report', report_type='found') }}">I found something</a>
+      </div>
+      <div class="trust-line"><span class="avatar-stack"><i>A</i><i>R</i><i>S</i></span><span>Built for helpful people, powered by smart matching.</span></div>
+    </div>
+    <div class="hero-art" aria-label="Illustration of a lost and found item card">
+      <div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div>
+      <div class="float-tag tag-top"><span class="tag-icon mint">✓</span><span><b>Match found</b><small>Similar description</small></span><strong>92%</strong></div>
+      <div class="item-illustration">
+        <div class="sun-disc"></div><div class="bag-handle"></div><div class="bag-body"><div class="bag-flap"></div><div class="bag-lock"></div><div class="bag-stitch"></div></div>
+        <div class="sparkle s1">✦</div><div class="sparkle s2">✧</div><div class="sparkle s3">✦</div>
+      </div>
+      <div class="float-tag tag-bottom"><span class="tag-icon lavender">⌖</span><span><b>Campus library</b><small>Reported just now</small></span></div>
+      <div class="art-caption">Every item has a way back.</div>
+    </div>
+  </div>
+  <div class="hero-bottom"><span>LOST & FOUND, REIMAGINED</span><span>Scroll to explore ↓</span></div>
+</section>
+<section class="stats-strip">
+  <div><strong>{{ lost_count }}</strong><span>Lost reports</span></div><div><strong>{{ found_count }}</strong><span>Found reports</span></div><div><strong>AI</strong><span>Assisted matching</span></div><div><strong>01</strong><span>Helpful community</span></div>
+</section>
+<section class="section how-section">
+  <div class="section-heading"><div><div class="eyebrow">HOW IT WORKS</div><h2>Three steps to a <em>happy reunion.</em></h2></div><p>No more searching through endless messages. Tell us what happened, and let Findly help you connect the dots.</p></div>
+  <div class="steps">
+    <article class="step-card"><div class="step-number">01</div><div class="step-icon peach">↗</div><h3>Share a report</h3><p>Describe the item, where it was last seen, and when it went missing or was found.</p><span class="step-line"></span></article>
+    <article class="step-card"><div class="step-number">02</div><div class="step-icon blue">✧</div><h3>Discover matches</h3><p>Our demo matching engine compares descriptions, categories, and locations.</p><span class="step-line"></span></article>
+    <article class="step-card"><div class="step-number">03</div><div class="step-icon green">♡</div><h3>Reconnect safely</h3><p>Review possible matches and ask the campus team to verify ownership.</p><span class="step-line"></span></article>
+  </div>
+</section>
+<section class="browse-band">
+  <div><div class="eyebrow light-eyebrow">THE COMMUNITY BOARD</div><h2>Little things matter.<br><em>Let's bring them back.</em></h2></div>
+  <a class="btn btn-white" href="{{ url_for('search') }}">Browse all reports <span>↗</span></a>
+  <div class="band-decoration">✦</div>
+</section>
+<section class="section recent-section">
+  <div class="section-heading"><div><div class="eyebrow">FRESH ON THE BOARD</div><h2>Recently <em>reported.</em></h2></div><a class="text-link" href="{{ url_for('search') }}">View all reports ↗</a></div>
+  {% if recent %}
+  <div class="item-grid">
+    {% for item in recent %}
+    <a class="item-card" href="{{ url_for('item_detail', item_id=item.id) }}">
+      <div class="item-card-top"><span class="category-mark">{{ {'Electronics':'⌁','Bags':'▱','Keys':'⚿','Documents':'▤','Clothing':'◇','Books':'▤','Accessories':'✧','Other':'＋'}.get(item.category, '✧') }}</span><span class="status-pill {{ item.report_type }}">{{ item.report_type }} item</span></div>
+      <h3>{{ item.title }}</h3><p>{{ item.description[:110] }}{% if item.description|length > 110 %}…{% endif %}</p>
+      <div class="item-meta"><span>⌖ {{ item.location }}</span><span>{{ item.item_date }}</span></div><div class="reporter-line">Reported by <strong>{{ item.contact_name }}</strong></div>
+      <div class="card-arrow">↗</div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><div class="empty-icon">✧</div><h3>The board is waiting for its first report.</h3><p>Be the first to help the community reconnect with a missing item.</p><a class="btn btn-primary" href="{{ url_for('report', report_type='lost') }}">Create first report ↗</a></div>
+  {% endif %}
+</section>
+<section class="privacy-note"><span class="privacy-icon">♧</span><div><b>Your privacy matters.</b><p>Contact details are used for follow-up only. This student demo is not a secure production service—avoid entering sensitive personal information.</p></div></section>
+{% endblock %}
